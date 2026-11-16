@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1020">
+<title>MathGenius AI｜数学训练系统</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2d;--panel2:#18233a;--line:#293653;--text:#edf3ff;--muted:#9aa9c4;--blue:#6ea8ff;--cyan:#67e8f9;--green:#36d399;--red:#fb7185;--gold:#fbbf24}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#17294b 0,transparent 42%),var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"PingFang SC","Microsoft YaHei",sans-serif;min-height:100vh}
+.wrap{max-width:1100px;margin:auto;padding:28px 18px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:13px}.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#4f8cff,#7c5cff);display:grid;place-items:center;font-size:25px;box-shadow:0 8px 28px #4f8cff40}.brand h1{font-size:22px;margin:0;letter-spacing:.2px}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px;letter-spacing:1.5px}.tag{border:1px solid #315b50;color:#83e6c0;background:#102b29;padding:7px 11px;border-radius:99px;font-size:12px;white-space:nowrap}
+.hero{margin-bottom:22px}.hero h2{font-size:clamp(25px,5vw,38px);margin:0 0 9px;letter-spacing:-.8px}.hero h2 span{background:linear-gradient(90deg,#8ab8ff,#77e5ed);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);margin:0;line-height:1.7}
+.grid{display:grid;grid-template-columns:360px minmax(0,1fr);gap:18px;align-items:start}.card{background:linear-gradient(160deg,#151f34,#10182a);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 15px 45px #0002}.card h3{font-size:16px;margin:0 0 17px;display:flex;align-items:center;gap:9px}.step{width:25px;height:25px;border-radius:8px;background:#233c63;color:#9cc4ff;display:grid;place-items:center;font-size:12px}
+.field{margin:0 0 16px}.field label{display:block;font-size:12px;color:#b8c6dc;margin-bottom:8px}.field input,.field select,.answer-input{width:100%;background:#0c1425;border:1px solid #30405f;border-radius:11px;padding:12px 13px;color:var(--text);font-size:14px;outline:none;transition:.2s}.field input:focus,.field select:focus,.answer-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #6ea8ff20}.field input::placeholder{color:#64748b}.hint{font-size:11px;color:#8191ad;margin-top:7px;line-height:1.5}
+.pills{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.pill{border:1px solid #30405f;background:#0c1425;color:#bdcbe0;border-radius:10px;padding:10px 4px;font-size:12px;cursor:pointer;transition:.18s}.pill.active{background:#1c3760;border-color:#6ea8ff;color:#dceaff;box-shadow:inset 0 0 0 1px #6ea8ff35}
+.primary,.secondary,.ghost{border:0;border-radius:12px;padding:13px 15px;font-weight:700;cursor:pointer;transition:.18s;font-size:14px}.primary{width:100%;color:#071326;background:linear-gradient(100deg,#8bbaff,#68e0ed);box-shadow:0 8px 24px #5aa9ff25}.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}.secondary{background:#213b61;color:#d9e9ff;border:1px solid #365b8e}.ghost{background:#18243a;color:#b8c8df;border:1px solid #30405f}.actions{display:flex;gap:9px;flex-wrap:wrap}.actions button{flex:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.stat{background:#0d1628;border:1px solid #253451;border-radius:13px;padding:12px}.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.stat strong{font-size:22px;font-variant-numeric:tabular-nums}
+.question-card{min-height:340px;display:flex;flex-direction:column}.q-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:20px}.q-label{font-size:12px;color:#9eb1ce}.difficulty{font-size:11px;border-radius:99px;padding:6px 9px;background:#2a2340;color:#d4baff;border:1px solid #59417d}.question{font-size:clamp(19px,3vw,27px);line-height:1.7;font-weight:650;letter-spacing:.2px;margin:8px 0 23px;word-break:break-word}.question .math{font-family:Georgia,"Times New Roman",serif;color:#dceaff}.answer-area{margin-top:auto}.answer-area label{display:block;color:#b8c6dc;font-size:12px;margin-bottom:8px}.answer-row{display:flex;gap:9px}.answer-row input{flex:1;min-width:0}.answer-row button{min-width:110px}.feedback{display:none;margin-top:14px;border-radius:12px;padding:13px 14px;line-height:1.6;font-size:13px}.feedback.show{display:block}.feedback.good{background:#103027;border:1px solid #236c53;color:#a9f4d4}.feedback.bad{background:#351d2a;border:1px solid #7c3448;color:#ffc0ca}.explain{margin-top:10px;color:#c8d5e9;font-size:13px;line-height:1.8;white-space:pre-line}
+.empty{color:#8fa0bc;text-align:center;margin:auto;line-height:1.8;padding:35px 10px}.empty .symbol{font-size:42px;margin-bottom:12px}
+.bottom-note{margin-top:17px;color:#73839f;font-size:11px;line-height:1.7;text-align:center}.history{margin-top:18px}.history-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.history-head h3{margin:0;font-size:14px}.history-list{display:grid;gap:8px}.history-item{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;background:#0d1628;border:1px solid #253451;font-size:12px}.history-item span:first-child{color:#b9c8df;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ok{color:var(--green)}.no{color:var(--red)}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.wrap{padding:20px 13px 45px}.card{padding:17px}.question-card{min-height:310px}.top{align-items:flex-start}.tag{font-size:10px}.brand h1{font-size:19px}}
+@media(max-width:390px){.pills{grid-template-columns:repeat(2,1fr)}.stats{gap:7px}.stat strong{font-size:19px}.answer-row{flex-direction:column}.answer-row button{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">∑</div><div><h1>MathGenius AI</h1><p>MATH PRACTICE STUDIO</p></div></div>
+    <div class="tag">● 本地智能出题版</div>
+  </header>
+  <section class="hero">
+    <h2>让每一次练习，<span>都有所进步。</span></h2>
+    <p>自定义数学题型、学习阶段与难度。生成题目，提交答案，即时判分并查看解题思路。</p>
+  </section>
+
+  <main class="grid">
+    <section class="card">
+      <h3><span class="step">01</span> 设置你的训练任务</h3>
+      <div class="field">
+        <label for="topic">想练习的数学题类型</label>
+        <input id="topic" list="topicList" placeholder="例如：一元一次方程、几何面积、函数">
+        <datalist id="topicList">
+          <option value="四则运算"><option value="一元一次方程"><option value="百分数"><option value="几何面积"><option value="勾股定理"><option value="一元二次方程"><option value="函数求值"><option value="数列"><option value="概率"><option value="导数">
+        </datalist>
+        <div class="hint">可输入题型关键词；也可以留空，让系统随机出题。</div>
+      </div>
+      <div class="field">
+        <label for="stage">学习阶段</label>
+        <select id="stage">
+          <option value="小学">小学</option><option value="初中" selected>初中</option><option value="高中">高中</option><option value="大学">大学</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>题目难度</label>
+        <div class="pills" id="difficulty">
+          <button class="pill" data-level="简单">简单</button><button class="pill active" data-level="中等">中等</button><button class="pill" data-level="困难">困难</button><button class="pill" data-level="专家">专家</button>
+        </div>
+      </div>
+      <button class="primary" id="generate">✦ 生成一道数学题</button>
+      <div class="bottom-note">提示：本版本使用内置算法在浏览器本地生成题目，无需联网或 API Key。题目类型覆盖范围取决于内置题库。</div>
+    </section>
+
+    <section>
+      <div class="stats">
+        <div class="stat"><small>累计答题</small><strong id="total">0</strong></div>
+        <div class="stat"><small>答对题数</small><strong id="correct" class="ok">0</strong></div>
+        <div class="stat"><small>正确率</small><strong id="rate">—</strong></div>
+      </div>
+      <div class="card question-card">
+        <div class="q-head"><div class="q-label" id="qMeta">等待生成题目</div><div class="difficulty" id="qDiff">READY</div></div>
+        <div id="empty" class="empty"><div class="symbol">📘</div><strong>准备好开始挑战了吗？</strong><br>先在左侧设置题型、阶段和难度，<br>然后点击「生成一道数学题」。</div>
+        <div id="questionWrap" style="display:none">
+          <div class="question" id="question"></div>
+          <div class="answer-area">
+            <label for="answer">输入你的答案</label>
+            <div class="answer-row"><input class="answer-input" id="answer" placeholder="输入数字或数学结果" autocomplete="off"><button class="secondary" id="submit">提交答案</button></div>
+            <div class="hint">支持整数、小数和分数（例如 0.5 或 1/2）。方程题请填写未知数的值。</div>
+          </div>
+          <div id="feedback" class="feedback"></div>
+        </div>
+      </div>
+      <div class="card history">
+        <div class="history-head"><h3>最近答题记录</h3><button class="ghost" id="clearHistory" style="padding:7px 10px;font-size:11px">清空记录</button></div>
+        <div class="history-list" id="history"><div class="hint">完成第一道题后，这里会显示你的答题记录。</div></div>
+      </div>
+    </section>
+  </main>
+  <div class="bottom-note">MathGenius AI · 学习辅助工具 · 请结合课堂教材使用</div>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let difficulty = '中等', current = null, total = 0, correct = 0, history = [];
+  const rand = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+  const pick = arr => arr[rand(0,arr.length-1)];
+  const gcd = (a,b) => b ? gcd(b,a%b) : Math.abs(a);
+  const fmt = n => Number.isInteger(n) ? String(n) : String(Number(n.toFixed(4)));
+  const stage = () => $('stage').value;
+  const level = () => difficulty;
+  const scale = () => ({简单:1,中等:2,困难:3,专家:4}[level()]);
+  function make(type, text, answer, explanation) { return {type, text, answer:Number(answer), explanation}; }
+
+  function generateQuestion() {
+    const s=stage(), d=scale(), raw=$('topic').value.trim().toLowerCase();
+    let type='';
+    if(raw.includes('方程') && (raw.includes('二次') || raw.includes('一元二次'))) type='quadratic';
+    else if(raw.includes('方程') || raw.includes('代数')) type='linear';
+    else if(raw.includes('百分') || raw.includes('折扣')) type='percent';
+    else if(raw.includes('面积') || raw.includes('几何')) type='area';
+    else if(raw.includes('勾股') || raw.includes('直角三角')) type='pythag';
+    else if(raw.includes('函数')) type='function';
+    else if(raw.includes('数列')) type='sequence';
+    else if(raw.includes('概率')) type='probability';
+    else if(raw.includes('导数') || raw.includes('微分')) type='derivative';
+    else if(raw.includes('积分')) type='integral';
+    else if(raw.includes('四则') || raw.includes('运算') || raw.includes('计算')) type='arithmetic';
+    else {
+      let allowed = s==='小学' ? ['arithmetic','percent','area'] :
+        s==='初中' ? ['arithmetic','linear','percent','area','pythag'] :
+        s==='高中' ? ['linear','quadratic','function','sequence','probability','pythag'] :
+        ['function','sequence','probability','derivative','integral','quadratic'];
+      type=pick(allowed);
+    }
+    // Keep advanced topics aligned with the selected learning stage.
+    if(s==='小学' && ['quadratic','function','sequence','probability','derivative','integral','linear','pythag'].includes(type)) type='arithmetic';
+    if(s==='初中' && ['derivative','integral'].includes(type)) type='linear';
+    if(s==='高中' && ['derivative','integral'].includes(type)) type='function';
+
+    let a,b,c,x;
+    switch(type) {
+      case 'arithmetic': {
+        a=rand(3,12*d); b=rand(2,10*d);
+        if(d===1) return make('四则运算',`计算：${a} + ${b} × 2 = ?`,a+b*2,`先算乘法：${b} × 2 = ${b*2}\n再算加法：${a} + ${b*2} = ${a+b*2}`);
+        // Build a compound expression with one shared multiplier.
+        let m=rand(2,5), ans=(a+b)*m-a;
+        return make('四则运算',`计算：(${a} + ${b}) × ${m} − ${a} = ?`,ans,`括号内先计算：${a} + ${b} = ${a+b}\n再乘以 ${m}：${(a+b)*m}\n最后减去 ${a}，答案是 ${ans}`);
+      }
+      case 'linear': {
+        let sol=rand(-8,12), coef=rand(2,5*d), k=rand(-10,15);
+        let rhs=coef*sol+k;
+        return make('一元一次方程',`解方程：${coef}x ${k>=0?'+':'−'} ${Math.abs(k)} = ${rhs}。求 x。`,sol,`移项：${coef}x = ${rhs} ${k>=0?'−':'+'} ${Math.abs(k)} = ${coef*sol}\n两边同时除以 ${coef}：x = ${sol}`);
+      }
+      case 'percent': {
+        let base=rand(40,200)*d, p=pick([10,15,20,25,30,40,50]);
+        return make('百分数',`一件商品原价 ${base} 元，现在降价 ${p}%。现价是多少元？`,base*(1-p/100),`降价金额：${base} × ${p}% = ${fmt(base*p/100)} 元\n现价：${base} − ${fmt(base*p/100)} = ${fmt(base*(1-p/100))} 元`);
+      }
+      case 'area': {
+        if(pick([true,false])) {let w=rand(3,8*d),h=rand(3,9*d);return make('几何面积',`一个长方形长 ${w} cm、宽 ${h} cm，面积是多少平方厘米？`,w*h,`长方形面积 = 长 × 宽\n${w} × ${h} = ${w*h} 平方厘米`);}
+        let r=rand(2,5*d); return make('几何面积',`一个圆的半径是 ${r} cm，求它的面积（答案保留两位小数，π 取 3.14）。`,Number((3.14*r*r).toFixed(2)),`圆面积公式：S = πr²\nS = 3.14 × ${r}² = ${fmt(3.14*r*r)} 平方厘米`);
+      }
+      case 'pythag': {
+        let triples=[[3,4,5],[5,12,13],[6,8,10],[8,15,17],[7,24,25]], t=pick(triples);
+        if(d>=3) t=pick([[9,12,15],[12,16,20],[9,40,41]]);
+        return make('勾股定理',`直角三角形两条直角边分别为 ${t[0]} cm 和 ${t[1]} cm，斜边长是多少厘米？`,t[2],`根据勾股定理：斜边² = ${t[0]}² + ${t[1]}²\n= ${t[0]*t[0]} + ${t[1]*t[1]} = ${t[2]*t[2]}\n所以斜边 = ${t[2]} cm`);
+      }
+      case 'quadratic': {
+        let r1=rand(-5,5),r2=rand(-5,5); if(r1===r2) r2+=2;
+        let sum=r1+r2, prod=r1*r2;
+        return make('一元二次方程',`已知方程 x² ${-sum>=0?'+':'−'} ${Math.abs(sum)}x ${prod>=0?'+':'−'} ${Math.abs(prod)} = 0，求其中较大的根。`,Math.max(r1,r2),`因式分解：(${`x ${r1>=0?'-':'+'} ${Math.abs(r1)}`})(${`x ${r2>=0?'-':'+'} ${Math.abs(r2)}`}) = 0\n两个根为 ${r1} 和 ${r2}，较大的根是 ${Math.max(r1,r2)}。`);
+      }
+      case 'function': {
+        let m=rand(2,4*d), k=rand(-8,10), val=rand(-4,6);
+        return make('函数求值',`已知 f(x) = ${m}x ${k>=0?'+':'−'} ${Math.abs(k)}，求 f(${val})。`,m*val+k,`将 x = ${val} 代入：\nf(${val}) = ${m} × (${val}) ${k>=0?'+':'−'} ${Math.abs(k)}\n= ${m*val} ${k>=0?'+':'−'} ${Math.abs(k)} = ${m*val+k}`);
+      }
+      case 'sequence': {
+        let first=rand(1,10), diff=rand(2,5*d), n=rand(5,10);
+        return make('等差数列',`一个等差数列首项为 ${first}，公差为 ${diff}，求第 ${n} 项。`,first+(n-1)*diff,`等差数列通项公式：aₙ = a₁ + (n−1)d\n代入：a${n} = ${first} + (${n}−1) × ${diff} = ${first+(n-1)*diff}`);
+      }
+      case 'probability': {
+        let red=rand(2,6), blue=rand(2,6), total=red+blue;
+        return make('概率',`袋中有 ${red} 个红球和 ${blue} 个蓝球，随机取出 1 个，取到红球的概率是多少？请用小数表示。`,Number((red/total).toFixed(4)),`概率 = 所求情况数 ÷ 总情况数\nP(红球) = ${red} ÷ (${red} + ${blue}) = ${fmt(red/total)}`);
+      }
+      case 'derivative': {
+        let n=rand(2,5), val=rand(1,4);
+        return make('导数',`函数 f(x) = x^${n}，求 f'(${val}) 的值。`,n*Math.pow(val,n-1),`幂函数求导：若 f(x)=xⁿ，则 f'(x)=nxⁿ⁻¹\n所以 f'(${val}) = ${n} × ${val}^${n-1} = ${n*Math.pow(val,n-1)}`);
+      }
+      case 'integral': {
+        let n=rand(1,4), val=rand(1,3);
+        return make('定积分',`计算定积分 ∫₀^${val} ${n===1?'1':` ${n}x`} dx。`,n===1?val:n*val*val/2, n===1?`常数函数 1 的积分为 x。\n[x]₀^${val} = ${val}`:`原函数为 ${n/2}x²。\n代入上下限：${n/2} × ${val}² = ${n*val*val/2}`);
+      }
+    }
+    return make('四则运算','计算：8 + 6 × 3 = ?',26,'先乘除后加减：6 × 3 = 18，8 + 18 = 26。');
+  }
+  // Button state
+  document.querySelectorAll('.pill').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); difficulty=btn.dataset.level;
+  }));
+  function newQuestion(){
+    current=generateQuestion();
+    $('empty').style.display='none'; $('questionWrap').style.display='block';
+    $('qMeta').textContent=`${stage()} · ${current.type}`;
+    $('qDiff').textContent=difficulty;
+    $('question').textContent=current.text;
+    $('answer').value=''; $('answer').disabled=false; $('submit').disabled=false;
+    $('feedback').className='feedback'; $('feedback').innerHTML='';
+    $('answer').focus();
+  }
+  function parseAnswer(value){
+    let v=value.trim().replace(/，/g,'.').replace(/,/g,'.').replace(/\s/g,'');
+    if(/^[-+]?\d+\/[-+]?\d+$/.test(v)){let [a,b]=v.split('/').map(Number);if(b===0)return NaN;return a/b;}
+    return Number(v);
+  }
+  function submit(){
+    if(!current){alert('请先生成一道题目。');return;}
+    if($('submit').disabled)return;
+    const raw=$('answer').value;
+    if(!raw.trim()){alert('请先输入答案。');$('answer').focus();return;}
+    const value=parseAnswer(raw);
+    if(!Number.isFinite(value)){alert('答案格式不正确，请输入数字或分数，例如 0.5 或 1/2。');return;}
+    const ok=Math.abs(value-current.answer)<0.0001;
+    total++; if(ok)correct++;
+    updateStats();
+    const fb=$('feedback');
+    fb.className='feedback show '+(ok?'good':'bad');
+    fb.innerHTML=`<strong>${ok?'✓ 恭喜你，过！':'✕ 很遗憾，不通过！'}</strong><div>${ok?'回答正确，继续保持！':`正确答案：${fmt(current.answer)}`}</div><div class="explain"><b>解题思路：</b>\n${escapeHtml(current.explanation)}</div>`;
+    history.unshift({text:current.text,ok,answer:raw});
+    history=history.slice(0,5); renderHistory();
+    $('answer').disabled=true; $('submit').disabled=true;
+  }
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function updateStats(){
+    $('total').textContent=total; $('correct').textContent=correct;
+    $('rate').textContent=total?Math.round(correct/total*100)+'%':'—';
+  }
+  function renderHistory(){
+    $('history').innerHTML=history.length?history.map(h=>`<div class="history-item"><span>${escapeHtml(h.text)}</span><b class="${h.ok?'ok':'no'}">${h.ok?'通过':'未通过'}</b></div>`).join(''):'<div class="hint">完成第一道题后，这里会显示你的答题记录。</div>';
+  }
+  $('generate').addEventListener('click',newQuestion);
+  $('submit').addEventListener('click',submit);
+  $('answer').addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
+  $('clearHistory').addEventListener('click',()=>{history=[];renderHistory();});
+})();
+</script>
+</body>
+</html>
